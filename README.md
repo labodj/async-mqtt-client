@@ -1,7 +1,7 @@
 Async MQTT client for ESP8266 and ESP32
 =============================
 
-[![Build Status](https://github.com/HeMan/async-mqtt-client/actions/workflows/push.yml/badge.svg)](https://github.com/HeMan/async-mqtt-client/actions/workflows/push.yml)
+[![Build Status](https://github.com/labodj/async-mqtt-client/actions/workflows/push.yml/badge.svg)](https://github.com/labodj/async-mqtt-client/actions/workflows/push.yml)
 
 A maintained fork of the [AsyncMQTTClient](https://github.com/marvinroger/async-mqtt-client) library by [@marvinroger](https://github.com/marvinroger) for [ESPHome](https://esphome.io).
 
