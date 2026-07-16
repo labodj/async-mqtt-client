@@ -44,7 +44,12 @@
 #include "AsyncMqttClient/Packets/PubCompPacket.hpp"
 
 #if defined(ESP32) || defined(LIBRETINY)
-#define SEMAPHORE_TAKE(X) if (xSemaphoreTake(_xSemaphore, 1000 / portTICK_PERIOD_MS) != pdTRUE) { return X; }  // Waits max 1000ms
+#define SEMAPHORE_TAKE(X)                           \
+  if (xSemaphoreTake(_xSemaphore,                   \
+                     1000 / portTICK_PERIOD_MS) !=  \
+      pdTRUE) {                                     \
+    return X;                                       \
+  }
 #define SEMAPHORE_GIVE() xSemaphoreGive(_xSemaphore);
 #elif defined(ESP8266)
 #define SEMAPHORE_TAKE(X) void()
@@ -99,7 +104,7 @@ class AsyncMqttClient {
   uint32_t _lastServerActivity;
   uint32_t _lastPingRequestTime;
 
-  char _generatedClientId[18 + 1];  // esp8266-abc123 and esp32-abcdef123456 
+  char _generatedClientId[18 + 1];  // esp8266-abc123 and esp32-abcdef123456
   IPAddress _ip;
   const char* _host;
   bool _useIp;

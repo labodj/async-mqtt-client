@@ -324,7 +324,7 @@ void AsyncMqttClient::_onConnect(AsyncClient* client) {
   sendbuffer[3] = 'Q';
   sendbuffer[4] = 'T';
   sendbuffer[5] = 'T';
-  
+
   sendbuffer[6] = protocolLevel[0];
   sendbuffer[7] = connectFlags[0];
   sendbuffer[8] = keepAliveBytes[0];
@@ -628,7 +628,10 @@ bool AsyncMqttClient::_sendPing() {
   size_t neededSpace = 2;
 
   SEMAPHORE_TAKE(false);
-  if (_client.space() < neededSpace) { SEMAPHORE_GIVE(); return false; }
+  if (_client.space() < neededSpace) {
+    SEMAPHORE_GIVE();
+    return false;
+  }
 
   _client.add(fixedHeader, 2);
   _client.send();
@@ -677,7 +680,10 @@ bool AsyncMqttClient::_sendDisconnect() {
 
   SEMAPHORE_TAKE(false);
 
-  if (_client.space() < neededSpace) { SEMAPHORE_GIVE(); return false; }
+  if (_client.space() < neededSpace) {
+    SEMAPHORE_GIVE();
+    return false;
+  }
 
   char fixedHeader[2];
   fixedHeader[0] = AsyncMqttClientInternals::PacketType.DISCONNECT;
@@ -763,7 +769,10 @@ uint16_t AsyncMqttClient::subscribe(const char* topic, uint8_t qos) {
   neededSpace += 1;
 
   SEMAPHORE_TAKE(0);
-  if (_client.space() < neededSpace) { SEMAPHORE_GIVE(); return 0; }
+  if (_client.space() < neededSpace) {
+    SEMAPHORE_GIVE();
+    return 0;
+  }
 
   uint16_t packetId = _getNextPacketId();
   char packetIdBytes[2];
@@ -804,7 +813,10 @@ uint16_t AsyncMqttClient::unsubscribe(const char* topic) {
   neededSpace += topicLength;
 
   SEMAPHORE_TAKE(0);
-  if (_client.space() < neededSpace) { SEMAPHORE_GIVE(); return 0; }
+  if (_client.space() < neededSpace) {
+    SEMAPHORE_GIVE();
+    return 0;
+  }
 
   uint16_t packetId = _getNextPacketId();
   char packetIdBytes[2];
@@ -862,7 +874,10 @@ uint16_t AsyncMqttClient::publish(const char* topic, uint8_t qos, bool retain, c
   if (payload != nullptr) neededSpace += payloadLength;
 
   SEMAPHORE_TAKE(0);
-  if (_client.space() < neededSpace) { SEMAPHORE_GIVE(); return 0; }
+  if (_client.space() < neededSpace) {
+    SEMAPHORE_GIVE();
+    return 0;
+  }
 
   uint16_t packetId = 0;
   char packetIdBytes[2];
