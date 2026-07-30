@@ -2,29 +2,51 @@ name: Async MQTT client CI
 
 on:
   push:
-    branches:
   pull_request:
 
 jobs:
-
   build-pio:
-    name: PlatformIO on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: PlatformIO ${{ matrix.name }}
+    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        include:
+          - name: ESP8266
+            board: esp12e
+            example: examples/FullyFeatured-ESP8266
+            platform: ""
+          - name: ESP32 Arduino 2
+            board: esp32dev
+            example: examples/FullyFeatured-ESP32
+            platform: platformio/espressif32@6.13.0
+          - name: ESP32 Arduino 3
+            board: esp32dev
+            example: examples/FullyFeatured-ESP32
+            platform: https://github.com/pioarduino/platform-espressif32/releases/download/stable/platform-espressif32.zip
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/cache@v3
-      with:
-        path: |
-          ~/.cache/pip
-          ~/.platformio/.cache
-        key: ${{ runner.os }}-pio
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    - name: Install PlatformIO Core
-      run: pip install --upgrade platformio
-    - name: Build Tests
-      run: bash ./.github/scripts/on-push.sh
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install PlatformIO Core
+        run: python -m pip install --upgrade platformio intelhex
+      - name: Build example
+        run: |
+          args=(--lib=. --board "${{ matrix.board }}" -O "lib_compat_mode=strict")
+          if [ -n "${{ matrix.platform }}" ]; then
+            args+=(-O "platform=${{ matrix.platform }}")
+          fi
+          pio ci "${args[@]}" "${{ matrix.example }}"
+
+  package:
+    name: Validate PlatformIO package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install PlatformIO Core
+        run: python -m pip install --upgrade platformio
+      - run: pio pkg pack
