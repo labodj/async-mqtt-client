@@ -1,6 +1,6 @@
 {
   "name": "AsyncMqttClient-esphome",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "keywords": "iot, home, automation, async, mqtt, client, esp8266",
   "description": "Maintained fork of AsyncMqttClient with updated ESPAsyncTCP / AsyncTCP dependencies for modern ESP32 toolchains",
   "homepage": "https://github.com/labodj/async-mqtt-client",
