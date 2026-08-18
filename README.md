@@ -40,7 +40,7 @@ The package is available in the
 
 ```ini
 lib_deps =
-  labodj/AsyncMqttClient-esphome@^2.1.3
+  labodj/AsyncMqttClient-esphome@^2.1.4
 ```
 
 Firmware projects that require fully reproducible dependency resolution should
