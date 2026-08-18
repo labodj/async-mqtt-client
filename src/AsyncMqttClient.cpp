@@ -1,5 +1,17 @@
 #include "AsyncMqttClient.hpp"
 
+namespace {
+
+void closeClient(AsyncClient* client) {
+#ifdef ESP32
+  client->close();
+#else
+  client->close(true);
+#endif
+}
+
+}  // namespace
+
 AsyncMqttClient::AsyncMqttClient()
 : _connected(false)
 , _connectPacketNotEnoughSpace(false)
@@ -194,7 +206,7 @@ void AsyncMqttClient::_onConnect(AsyncClient* client) {
 
     if (!sslFoundFingerprint) {
       _tlsBadFingerprint = true;
-      _client.close(true);
+      closeClient(&_client);
       return;
     }
   }
@@ -308,7 +320,7 @@ void AsyncMqttClient::_onConnect(AsyncClient* client) {
   SEMAPHORE_TAKE();
   if (_client.space() < neededSpace) {
     _connectPacketNotEnoughSpace = true;
-    _client.close(true);
+    closeClient(&_client);
     SEMAPHORE_GIVE();
     return;
   }
@@ -693,7 +705,7 @@ bool AsyncMqttClient::_sendDisconnect() {
 
   _client.add(fixedHeader, 2);
   _client.send();
-  _client.close(true);
+  closeClient(&_client);
 
   _disconnectOnPoll = false;
 
@@ -736,7 +748,7 @@ void AsyncMqttClient::disconnect(bool force) {
   if (!_connected) return;
 
   if (force) {
-    _client.close(true);
+    closeClient(&_client);
   } else {
     _sendDisconnect();
     _disconnectOnPoll = false;
