@@ -36,5 +36,16 @@
       "version": "^3.5.0",
       "platforms": ["espressif32", "libretiny"]
     }
-  ]
+  ],
+  "export": {
+    "include": [
+      "LICENSE",
+      "README.md",
+      "docs/*",
+      "examples/*",
+      "keywords.txt",
+      "library.json",
+      "src/*"
+    ]
+  }
 }

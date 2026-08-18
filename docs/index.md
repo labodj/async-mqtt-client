@@ -1,4 +1,5 @@
-Welcome to the AsyncMqttClient for ESP8266 docs.
+Welcome to the AsyncMqttClient compatibility fork documentation for ESP8266
+and ESP32.
 
 **<p align="center">This documentation is only valid for the AsyncMqttClient version in this repo/directory</p>**
 

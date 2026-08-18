@@ -49,4 +49,12 @@ jobs:
           python-version: "3.12"
       - name: Install PlatformIO Core
         run: python -m pip install --upgrade platformio
-      - run: pio pkg pack
+      - name: Validate package contents
+        run: |
+          set -eu
+          package_path=$(mktemp --suffix=.tar.gz)
+          trap 'rm -f "$package_path"' EXIT
+
+          pio pkg pack --output "$package_path"
+          tar -tzf "$package_path" | grep -Fxq "src/AsyncMqttClient.cpp"
+          test "$(stat -c %s "$package_path")" -lt 1048576

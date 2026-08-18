@@ -1,20 +1,49 @@
-Async MQTT client for ESP8266 and ESP32
-=============================
+# Async MQTT client compatibility fork for ESP8266 and ESP32
 
 [![Build Status](https://github.com/labodj/async-mqtt-client/actions/workflows/push.yml/badge.svg)](https://github.com/labodj/async-mqtt-client/actions/workflows/push.yml)
 
-A maintained fork of the [AsyncMQTTClient](https://github.com/marvinroger/async-mqtt-client) library by [@marvinroger](https://github.com/marvinroger) for [ESPHome](https://esphome.io).
+This repository is the LSH compatibility fork of
+[AsyncMqttClient](https://github.com/marvinroger/async-mqtt-client). Its
+lineage is `marvinroger` -> `OttoWinter` -> `HeMan` -> `labodj`; the
+`-esphome` package name is inherited from the OttoWinter fork. This project is
+not maintained by or for the ESPHome project.
 
-An Arduino for ESP8266 and ESP32 asynchronous [MQTT](http://mqtt.org/) client implementation, built on [me-no-dev/ESPAsyncTCP (ESP8266)](https://github.com/me-no-dev/ESPAsyncTCP) | [me-no-dev/AsyncTCP (ESP32)](https://github.com/me-no-dev/AsyncTCP) .
+## Why this fork exists
+
+The HeMan release used by Homie pins the discontinued `esphome` async TCP
+packages and does not compile with current ESP32 Arduino 3 toolchains. This
+fork keeps that MQTT implementation and public API while switching its network
+dependencies to the maintained
+[ESP32Async](https://github.com/ESP32Async) packages:
+
+- `ESP32Async/ESPAsyncTCP ^2.0.0` on ESP8266
+- `ESP32Async/AsyncTCP ^3.5.0` on ESP32 and LibreTiny
+
+It also handles the current ESP32 `AsyncClient::close()` API without changing
+the immediate-close behavior required by the ESP8266 backend. There are no
+other intentional changes to MQTT behavior relative to HeMan 2.1.0.
+
 ## Features
 
-* Compliant with the 3.1.1 version of the protocol
-* Fully asynchronous
-* Subscribe at QoS 0, 1 and 2
-* Publish at QoS 0, 1 and 2
-* SSL/TLS support
-* Available in the [PlatformIO registry](http://platformio.org/lib/show/346/AsyncMqttClient)
+- MQTT 3.1.1
+- Fully asynchronous operation
+- Subscribe and publish at QoS 0, 1 and 2
+- ESP8266, ESP32 Arduino 2, and ESP32 Arduino 3 CI builds
 
-## Requirements, installation and usage
+The current ESP32Async transports do not provide the historical asynchronous
+SSL/TLS path. See [limitations and known issues](docs/4.-Limitations-and-known-issues.md).
 
-The project is documented in the [/docs folder](docs).
+## Installation
+
+The package is available in the
+[PlatformIO Registry](https://registry.platformio.org/libraries/labodj/AsyncMqttClient-esphome):
+
+```ini
+lib_deps =
+  labodj/AsyncMqttClient-esphome@^2.1.3
+```
+
+Firmware projects that require fully reproducible dependency resolution should
+pin a release archive or exact commit instead of a version range.
+
+API and usage documentation is in the [docs folder](docs).
