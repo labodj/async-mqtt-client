@@ -19,7 +19,7 @@ jobs:
           - name: ESP32 Arduino 2
             board: esp32dev
             example: examples/FullyFeatured-ESP32
-            platform: platformio/espressif32@6.13.0
+            platform: platformio/espressif32@7.1.0
           - name: ESP32 Arduino 3
             board: esp32dev
             example: examples/FullyFeatured-ESP32
